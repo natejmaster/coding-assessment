@@ -25,6 +25,8 @@ function displayQuestion(question, answers) {
   //Clear previous answers
   answersList.innerHTML = "";
 
+  //Set the correctAnswer variable as the first answer in the answers array.
+  correctAnswer = answers[0];
   // Shuffle the answers array
   let shuffledAnswers = shuffleArray(answers);
 
@@ -35,9 +37,6 @@ function displayQuestion(question, answers) {
     button.classList.add("answer-choice");
     answersList.appendChild(button);
   });
-
-  // Update the correctAnswer variable with the correct answer for the current question
-  correctAnswer = shuffledAnswers[0];
 }
 
 //Shuffle the answers relatively randomly using a Fisher-Yates shuffle (researched on Stack Overflow: https://stackoverflow.com/questions/59810241/how-to-fisher-yates-shuffle-a-javascript-array)
