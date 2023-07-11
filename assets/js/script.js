@@ -31,6 +31,7 @@ function countdown() {
 
     if (timer === 0) {
       clearInterval(runningTimer);
+      window.alert("Game Over!");
     }
   }, 1000);
 }
@@ -39,6 +40,7 @@ function countdown() {
   function displayQuestion() {
     let question = questions[currentQuestionIndex];
     let answerOptions = answers[currentQuestionIndex];
+    correctAnswer = answerOptions[0];
   questionEl.textContent = question;
   answersList.innerHTML = "";
 
@@ -50,8 +52,6 @@ function countdown() {
     button.classList.add("answer-choice");
     answersList.appendChild(button);
   });
-
-  correctAnswer = answerOptions[0];
 }
 
 //Shuffle the answers relatively randomly using a Fisher-Yates shuffle (researched on Stack Overflow: https://stackoverflow.com/questions/59810241/how-to-fisher-yates-shuffle-a-javascript-array)
@@ -67,7 +67,6 @@ function shuffleArray(array) {
 startButton.addEventListener('click', function () {
   countdown();
   displayQuestion();
-  currentQuestionIndex++;
 });
 
 //Adds an event listener for each button
@@ -90,7 +89,7 @@ answersList.addEventListener('click', function (event) {
     // Check if there are more questions available
     if (currentQuestionIndex < questions.length) {
       // Display the next question
-      displayQuestion(currentQuestionIndex);
+      displayQuestion();
     } else {
       // No more questions, game over
       window.alert("Game Over!");
