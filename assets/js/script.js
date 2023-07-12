@@ -98,6 +98,24 @@ answersList.addEventListener('click', function (event) {
     } else {
       // No more questions, game over
       window.alert("Game Over!");
+      const initials = prompt("Enter your initials:");
+      if (initials) {
+        const timeEntry = { initials, time: 60 - timer };
+        let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+        highScores.push(timeEntry);
+        localStorage.setItem('highScores', JSON.stringify(highScores));
+        renderHighScores();
+        function renderHighScores() {
+          const highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+          const highScoresList = document.querySelector('#high-scores');
+          highScoresList.innerHTML = '';
+          highScores.forEach(function (score) {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${score.initials}: ${score.time}s`;
+            highScoresList.appendChild(listItem);
+          });
+        }        
+      }
     }
   }
 });
