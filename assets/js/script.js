@@ -66,6 +66,7 @@ function shuffleArray(array) {
 
 //Event listener for the Start Button that runs the countdown function when the Start Button is clicked
 startButton.addEventListener('click', function () {
+  startButton.style.display = 'none';
   countdown();
   displayQuestion();
 });
