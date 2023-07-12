@@ -10,20 +10,20 @@
 
 <body>
     <h1>Coding Assessment Game</h1>
+    <div id="high-scores-box">
+        <h4>High Scores:</h4>
+        <ul id="high-scores"></ul>
+        <button id="clear-scores-button">Clear Scores</button>
+    </div> 
     <p>Press the "Start Game" button to begin the game.</p>
     <button id="start-button">Start Game</button>
-    <div id="question-box">
+    <div id="question-box" style="display: none;">
         <h3 id="question"></h3>
-        <ul id="answers">
-        </ul>
+        <ul id="answers"></ul>
     </div>
     <div id="timer-box">
         <h4>Time Remaining: <span id="time-remaining"></span></h4>
     </div>
-    <div id="high-scores-box">
-        <h4>High Scores:</h4>
-        <ul id="high-scores"></ul>
-    </div>    
     <script src="./assets/js/script.js"></script>
 </body>
 

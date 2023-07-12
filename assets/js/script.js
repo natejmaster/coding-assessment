@@ -1,38 +1,43 @@
 //Variables that must be declared to be acted upon
 let startButton = document.querySelector("#start-button");
+let clearScoresButton = document.querySelector("#clear-scores-button");
 let timeRemaining = document.querySelector("#time-remaining");
 let questionEl = document.querySelector("#question");
 let answersList = document.querySelector("#answers");
+let highScoresList = document.querySelector("#high-scores");
+let questionBox = document.querySelector("#question-box");
+let timerBox = document.querySelector("#timer-box");
 let correctAnswer = "";
 let timerInterval;
 //Creates an array of possible questions
 let questions = [
-  "Question 1",
-  "Question 2",
-  "Question 3",
-  "Question 4",
-  "Question 5"
+  "Which of the following coding languages is most exclusively associated with the styling and appearance of a website?",
+  "Where in a website's HTML should the script element that contains the link to the JavaScript document be located?",
+  "Which of the following is NOT a primitive data type?",
+  "If the value assigned to an object has [] on both sides of it, then that value is also known as a(n) _________.",
+  "Which of the following would be the appropriate way to call a function titled playFunction in JavaScript?"
 ];
 //Creates an array of possible answers for each question (these are linked to the corresponding questions in the array above-- i.e. they have the same index)
 let answers = [
-  ["Q1A1", "Q1A2", "Q1A3", "Q1A4"],
-  ["Q2A1", "Q2A2", "Q2A3", "Q2A4"],
-  ["Q3A1", "Q3A2", "Q3A3", "Q3A4"],
-  ["Q4A1", "Q4A2", "Q4A3", "Q4A4"],
-  ["Q5A1", "Q5A2", "Q5A3", "Q5A4"],
+  ["CSS", "HTML", "JavaScript", "Python"],
+  ["At the bottom of the body element", "At the top of the body element ", "At the top of the head element", "At the bottom of the head element"],
+  ["Variable", "Boolean", "String", "Number"],
+  ["Array", "Function", "Object", "Variable Pair"],
+  ["playFunction()", "()playFunction", "PlayFunction()", "play-function()"],
 ];
 
 let currentQuestionIndex = 0;
 //Countdown function that runs the 60 second timer for the game
 function countdown() {
   timer = 60;
-  let timerInterval = setInterval(function () {
+  timerInterval = setInterval(function () {
     timer--;
     timeRemaining.textContent = timer;
 
     if (timer === 0) {
       clearInterval(timerInterval);
       window.alert("Game Over!");
+      renderHighScores();
     }
   }, 1000);
 }
@@ -67,8 +72,18 @@ function shuffleArray(array) {
 //Event listener for the Start Button that runs the countdown function when the Start Button is clicked
 startButton.addEventListener('click', function () {
   startButton.style.display = 'none';
+  clearScoresButton.style.display = 'none';
+  highScoresList.innerHTML = '';
   countdown();
   displayQuestion();
+  questionBox.style.display = "block";
+  timerBox.style.display = "block";
+});
+
+//Event listener for the Clear Scores Button that clears high scores from localStorage:
+clearScoresButton.addEventListener("click", function () {
+  localStorage.removeItem("highScores");
+  highScoresList.innerHTML = "";
 });
 
 //Adds an event listener for each button
@@ -98,30 +113,39 @@ answersList.addEventListener('click', function (event) {
     } else {
       // No more questions, game over
       window.alert("Game Over!");
-      const initials = prompt("Enter your initials:");
+      clearInterval(timerInterval);
+
+      const initials = prompt("Enter your initials for the High Score Board");
       if (initials) {
-        const timeEntry = { initials, time: 60 - timer };
+        const timeEntry = { initials, time: 60 -timer };
         let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
         highScores.push(timeEntry);
         localStorage.setItem('highScores', JSON.stringify(highScores));
-        renderHighScores();
-        function renderHighScores() {
-          const highScores = JSON.parse(localStorage.getItem('highScores')) || [];
-          const highScoresList = document.querySelector('#high-scores');
-          highScoresList.innerHTML = '';
-          highScores.forEach(function (score) {
-            const listItem = document.createElement('li');
-            listItem.textContent = `${score.initials}: ${score.time}s`;
-            highScoresList.appendChild(listItem);
-          });
-        }        
-      }
+        showHighScores();
     }
   }
+}
 });
 
-//TO DO:
-//Commit final score (timer) to local storage with player's initials
-  //This also means we need an input for player's initials
-//Display current high scores on a standings board
-//If time, CSS styling?
+// Function to render the high scores
+function renderHighScores() {
+  const highScores = JSON.parse(localStorage.getItem("highScores")) || [];
+  highScores.forEach(function (score) {
+    const listItem = document.createElement("li");
+    listItem.textContent = `${score.initials}: ${score.time}`;
+    highScoresList.appendChild(listItem);
+  });
+}
+
+// Function to display the high scores
+function showHighScores() {
+  questionBox.style.display = "none";
+  timerBox.style.display = "none";
+  startButton.style.display = "block";
+  clearScoresButton.style.display = "block";
+  highScoresList.innerHTML = "";
+  renderHighScores();
+}
+
+// Initial rendering of high scores
+renderHighScores();
