@@ -53,9 +53,9 @@ function displayQuestion() {
   //Renders the question and answers
   questionEl.textContent = question;
   answersList.innerHTML = "";
-// Declares variable shuffledAnswers that will create the four answer buttons
+  // Declares variable shuffledAnswers that will create the four answer buttons
   let shuffledAnswers = shuffleArray(answerOptions);
-//Each answer gets its own corresponding button
+  //Each answer gets its own corresponding button
   shuffledAnswers.forEach(function (answer) {
     let button = document.createElement("button");
     button.textContent = answer;
@@ -76,14 +76,24 @@ function shuffleArray(array) {
   }
   return array;
 }
-
+//Function that resets the game after it ends
+function resetGame() {
+  //This resets the current question index back to the first question
+  currentQuestionIndex = 0;
+  //This clears any time left and silently reverts the time on the timer back to full time, 60 seconds.
+  clearInterval(timerInterval);
+  timeRemaining.textContent = "60";
+  //This reminds the machine to display the buttons during the game
+  startButton.style.display = "block";
+  clearScoresButton.style.display = "block";
+}
 //Event listener for the Start Button that runs the countdown function when the Start Button is clicked
 startButton.addEventListener('click', function () {
   //This hides the start button and the clear high scores button during the game
   startButton.style.display = 'none';
   clearScoresButton.style.display = 'none';
-  highScoresList.innerHTML = '';
-  //Once the Start Game button is pressed, the timer begins counting down and the first question is displayed.
+  //Once the Start Game button is pressed, the game refreshes, the timer begins counting down, and the first question is displayed.
+  resetGame();
   countdown();
   displayQuestion();
   questionBox.style.display = "block";
@@ -130,20 +140,25 @@ answersList.addEventListener('click', function (event) {
       //If the user enters their initials, a score is rendered based on how much time it took to complete the quiz (with penalties for incorrect answers)
       if (initials) {
         //An object is created with two values: the initials, and the time
-        const timeEntry = { initials, time: 60 -timer };
+        const timeEntry = { initials, time: 60 - timer };
         //The high score is moved through the JavaScript and transformed back into a string as it is pushed into the high score list
         let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
         highScores.push(timeEntry);
         localStorage.setItem('highScores', JSON.stringify(highScores));
         showHighScores();
+      }
     }
   }
-}
 });
 
 // Function to render the high scores
 function renderHighScores() {
+  //Stores time remaining in localStorage under the variable name highScores
   const highScores = JSON.parse(localStorage.getItem("highScores")) || [];
+  //Orders high scores to ensure that faster times are rendered before slower times
+  highScores.sort((a, b) => a.time - b.time);
+  highScoresList.innerHTML = "";
+  //Creates a separate row for every high score
   highScores.forEach(function (score) {
     const listItem = document.createElement("li");
     listItem.textContent = `${score.initials}: ${score.time}`;
